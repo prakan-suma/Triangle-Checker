@@ -4,235 +4,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Triangle Checker</title>
+    <title>Triangle Solver</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding-top: 50px;
-        }
-
-        h1 {
-            font-weight: bold;
-            margin-bottom: 30px;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 500px;
-            padding: 20px;
-        }
-
-        .label-header {
-            font-size: 1.2em;
-            margin-bottom: 20px;
-            font-weight: bold;
-        }
-
-        .input-group {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .input-group label {
-            width: 80px;
-            font-size: 1.2em;
-            font-weight: bold;
-        }
-
-        .input-group input {
-            flex-grow: 1;
-            padding: 10px;
-            background-color: #d3d3d3;
-            border: none;
-            font-size: 1em;
-        }
-
-        .btn-enter {
-            width: 100%;
-            background-color: #ffd700;
-            border: none;
-            padding: 15px;
-            font-size: 1.2em;
-            cursor: pointer;
-            margin-top: 10px;
-            margin-bottom: 30px;
-            font-weight: bold;
-        }
-
-        .btn-enter:hover {
-            background-color: #e6c200;
-        }
-
-        .btn-clear {
-            width: 100%;
-            background-color: #f0f0f0;
-            border: 1px solid #ccc;
-            padding: 10px;
-            font-size: 1.1em;
-            cursor: pointer;
-            margin-top: -20px;
-            margin-bottom: 30px;
-            font-weight: normal;
-        }
-
-        .btn-clear:hover {
-            background-color: #e0e0e0;
-        }
-
-        .result-section {
-            display: flex;
-            align-items: center;
-            width: 100%;
-        }
-
-        .result-label {
-            width: 80px;
-            font-size: 1.2em;
-            font-weight: bold;
-        }
-
-        .result-box {
-            flex-grow: 1;
-            background-color: #d3d3d3;
-            padding: 15px;
-            min-height: 24px;
-            font-size: 1em;
-            display: flex;
-            align-items: center;
-        }
-
-        @media (max-width: 600px) {
-            .container {
-                width: 90%;
-            }
+            font-family: 'Inter', sans-serif;
         }
     </style>
 </head>
 
-<body>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center p-4">
+    <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md border border-gray-100">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Triangle Solver</h1>
 
-    <h1>Triangle Checker</h1>
-
-    <div class="container">
-        <div class="label-header">Enter the length of side</div>
-
-        <div class="input-group">
-            <label>Side 1</label>
-            <input type="text" id="side1" placeholder="input side 1">
+        <div class="space-y-4 mb-6">
+            <div>
+                <label for="side1" class="block text-sm font-medium text-gray-700 mb-1">Side 1</label>
+                <input type="number" id="side1" placeholder="Enter length"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+            </div>
+            <div>
+                <label for="side2" class="block text-sm font-medium text-gray-700 mb-1">Side 2</label>
+                <input type="number" id="side2" placeholder="Enter length"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+            </div>
+            <div>
+                <label for="side3" class="block text-sm font-medium text-gray-700 mb-1">Side 3</label>
+                <input type="number" id="side3" placeholder="Enter length"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+            </div>
         </div>
 
-        <div class="input-group">
-            <label>Side 2</label>
-            <input type="text" id="side2" placeholder="input side 2">
+        <button id="calculateBtn"
+            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition duration-200 transform hover:scale-[1.02]">
+            Analyze Triangle
+        </button>
+
+        <div id="resultContainer" class="mt-8 hidden opacity-0 transition-opacity duration-300">
+            <div class="text-center">
+                <h2 id="resultTitle" class="text-xl font-bold text-gray-900"></h2>
+                <p id="resultSubtitle" class="text-gray-600 text-sm mt-1"></p>
+            </div>
+            <div class="mt-6 flex justify-center">
+                <img id="resultImage" src="" alt="Triangle Result" class="w-48 h-48 object-contain">
+            </div>
         </div>
 
-        <div class="input-group">
-            <label>Side 3</label>
-            <input type="text" id="side3" placeholder="input side 3">
-        </div>
-
-        <!-- FR-02: Enter Button -->
-        <button class="btn-enter" onclick="processTriangle()">Enter</button>
-
-        <!-- FR-08: Clear Button -->
-        <!-- <button class="btn-clear" onclick="clearInputs()">Clear</button> -->
-
-        <div class="result-section">
-            <div class="result-label">Result</div>
-            <div class="result-box" id="resultBox"></div>
+        <div id="errorContainer" class="mt-6 hidden">
+            <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-r">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <p id="errorMessage" class="text-sm text-red-700"></p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <script>
-        function processTriangle() {
-            // --- FR-01: Get input values ---
-            const input1 = document.getElementById('side1').value;
-            const input2 = document.getElementById('side2').value;
-            const input3 = document.getElementById('side3').value;
-            const resultBox = document.getElementById('resultBox');
-
-            // --- FR-03: Validation ---
-
-            // Check empty input
-            if (input1.trim() === "" || input2.trim() === "" || input3.trim() === "") {
-                resultBox.innerText = "Invalid input";
-                return;
-            }
-
-            // Check if it is a number and has at most 2 decimal places
-            const decimalRegex = /^\d+(\.\d{1,2})?$/;
-            if (!decimalRegex.test(input1) || !decimalRegex.test(input2) || !decimalRegex.test(input3)) {
-                resultBox.innerText = "Invalid input";
-                return;
-            }
-
-            // Convert to number for calculations
-            const s1 = parseFloat(input1);
-            const s2 = parseFloat(input2);
-            const s3 = parseFloat(input3);
-
-            // Check if it is a positive number (> 0)
-            if (s1 <= 0 || s2 <= 0 || s3 <= 0) {
-                resultBox.innerText = "Invalid input";
-                return;
-            }
-
-            // --- FR-04: Check triangle inequality ---
-            const cond1 = (s1 + s2) > s3;
-            const cond2 = (s1 + s3) > s2;
-            const cond3 = (s2 + s3) > s1;
-
-            if (!(cond1 && cond2 && cond3)) {
-                resultBox.innerText = "Not a triangle";
-                return;
-            }
-
-            // --- FR-05: Classify by sides ---
-            let type = "";
-            if (s1 === s2 && s2 === s3) {
-                type = "Equilateral triangle";
-            } else if (s1 === s2 || s1 === s3 || s2 === s3) {
-                type = "Isosceles triangle";
-            } else {
-                type = "Scalene triangle";
-            }
-
-            // --- FR-06: Check if Right triangle ---
-            const sides = [s1, s2, s3].sort((a, b) => a - b);
-            const a = sides[0];
-            const b = sides[1];
-            const c = sides[2];
-
-            // Pythagorean theorem: a^2 + b^2 = c^2 with tolerance for floats (0.1 for 2-decimal accuracy)
-            const isRight = Math.abs((a * a + b * b) - (c * c)) < 0.1;
-
-            let message = "";
-            if (isRight) {
-                if (type === "Isosceles triangle") {
-                    message = "Right isosceles triangle";
-                } else {
-                    message = `Right triangle (${type.split(' ')[0].toLowerCase()})`;
-                }
-            } else {
-                message = type;
-            }
-
-            // --- FR-07: Show Result ---
-            resultBox.innerText = message;
-        }
-
-        // --- FR-08: Clear Inputs Function ---
-        function clearInputs() {
-            document.getElementById('side1').value = "";
-            document.getElementById('side2').value = "";
-            document.getElementById('side3').value = "";
-            document.getElementById('resultBox').innerText = "";
-        }
-    </script>
+    <!-- Scripts loaded sequentially for file:// compatibility -->
+    <script src="js/validator.js"></script>
+    <script src="js/classifier.js"></script>
+    <script src="js/imageViewer.js"></script>
+    <script src="js/main.js"></script>
 </body>
 
 </html>
